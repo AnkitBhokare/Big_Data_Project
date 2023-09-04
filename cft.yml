@@ -123,21 +123,19 @@ Resources:
             State: SUCCEEDED
       WorkflowName: !Ref MyWorkflow1
 
-  AthenaConnection:
-    Type: AWS::Athena::NamedQuery
+  MyAthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
     Properties:
-      Name: 'AthenaConnectionToYelpDatabase'
-      Description: 'Athena connection to the Yelp Glue database'
-      Database: 'database1'  # Name of your Glue database
-      # QueryString:
-      #   Fn::Sub:
-      #     - |
-      #       SELECT * FROM business_final;
-      #       SELECT * FROM tips_final;
-      #       SELECT * FROM checkin_final;
-      #       SELECT * FROM review_final;
-      #       SELECT * FROM user_final;
-      #     - {}
+      Name: MyWorkGroup
+      Description: workgroup for Athena
+      State: ENABLED
+      WorkGroupConfiguration:
+        BytesScannedCutoffPerQuery: 200000000
+        EnforceWorkGroupConfiguration: false
+        PublishCloudWatchMetricsEnabled: true
+        RequesterPaysEnabled: true
+        ResultConfiguration:
+            OutputLocation: s3://bucketaction/
 
 Outputs:
   WorkflowLambdaArn:
