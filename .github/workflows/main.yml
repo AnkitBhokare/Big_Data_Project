@@ -32,13 +32,13 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
       
-      - name: Deploy CloudFormation stack
-        run: |
-          aws s3 cp .github/workflows/Datawarehouse_script.py  s3://pythonscrift1/
+      # - name: Deploy CloudFormation stack
+      #   run: |
+      #     aws s3 cp .github/workflows/Datawarehouse_script.py  s3://pythonscrift1/
             
            
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-1
-          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_DEFAULT_REGION: us-east-1
+      #     AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
