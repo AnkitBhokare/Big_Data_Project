@@ -60,6 +60,11 @@ Resources:
       Targets:
         S3Targets:
           - Path: 's3://mergingdata1/'  # Change the path
+      TablePrefix: 'Cleanyelpdata'
+      SchemaChangePolicy:
+        UpdateBehavior: 'UPDATE_IN_DATABASE'
+        DeleteBehavior: 'LOG'
+      Configuration: '{"Version":1.0}'
       
   WorkflowLambda:
     Type: AWS::Lambda::Function
