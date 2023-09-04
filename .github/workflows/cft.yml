@@ -41,8 +41,7 @@ Resources:
       Command:
         Name: 'glueelt'
         ScriptLocation: 's3://scriftfile/Datawarehouse_Script.py'  # Change the path
-      ExecutionProperty:
-        MaxConcurrentRuns: 1
+      Executionclass: FLEX
       Name: 'mergingdata'
       GlueVersion: '4.0'
       WorkerType: 'G.1X'
@@ -61,12 +60,7 @@ Resources:
       Targets:
         S3Targets:
           - Path: 's3://mergingdata1/'  # Change the path
-      TablePrefix: 'data'
-      SchemaChangePolicy:
-        UpdateBehavior: 'UPDATE_IN_DATABASE'
-        DeleteBehavior: 'LOG'
-      Configuration: '{"Version":1.0}'
-
+      
   WorkflowLambda:
     Type: AWS::Lambda::Function
     Properties:
