@@ -126,19 +126,19 @@ Resources:
             State: SUCCEEDED
       WorkflowName: !Ref MyWorkflow1
 
-  # MyAthenaWorkGroup:
-  #   Type: AWS::Athena::WorkGroup
-  #   Properties:
-  #     Name: MyWorkGroup
-  #     Description: workgroup for Athena
-  #     State: ENABLED
-  #     WorkGroupConfiguration:
-  #       BytesScannedCutoffPerQuery: 200000000
-  #       EnforceWorkGroupConfiguration: false
-  #       PublishCloudWatchMetricsEnabled: true
-  #       RequesterPaysEnabled: true
-  #       ResultConfiguration:
-  #           OutputLocation: s3://bucketaction/
+  MyAthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: MyWorkGroup
+      Description: workgroup for Athena
+      State: ENABLED
+      WorkGroupConfiguration:
+        BytesScannedCutoffPerQuery: 200000000
+        EnforceWorkGroupConfiguration: false
+        PublishCloudWatchMetricsEnabled: true
+        RequesterPaysEnabled: true
+        ResultConfiguration:
+            OutputLocation: s3://bucketaction/
 
 Outputs:
   WorkflowLambdaArn:
