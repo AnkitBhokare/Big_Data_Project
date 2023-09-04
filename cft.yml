@@ -55,7 +55,7 @@ Resources:
     Type: AWS::Glue::Crawler
     Properties:
       Name: 'crawler1'
-      Role: 'arn:aws:iam::517977851664:role/LabRole
+      Role: 'arn:aws:iam::517977851664:role/LabRole'
       Description: 'AWS Glue crawler to crawl data'
       DatabaseName: !Ref MyDatabase
       Targets:
