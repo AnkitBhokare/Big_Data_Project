@@ -17,6 +17,14 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: 'mergingdata1'
+  
+  MyDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref 'AWS::AccountId'
+      DatabaseInput:
+        Name: 'database1'
+        Description: 'AWS Glue database creation'
 
 
   MyWorkflow1:
@@ -43,25 +51,21 @@ Resources:
       Timeout: 40
       AllocatedCapacity: 0  # Set to 0 to avoid conflicts
   
-  MyDatabase:
-    Type: AWS::Glue::Database
-    Properties:
-      CatalogId: !Ref 'AWS::AccountId'
-      DatabaseInput:
-        Name: 'database1'
-        Description: 'AWS Glue database creation'
-
-
   MyCrawler1:
     Type: AWS::Glue::Crawler
     Properties:
       Name: 'crawler1'
-      Role: arn:aws:iam::517977851664:role/LabRole
+      Role: 'arn:aws:iam::517977851664:role/LabRole
       Description: 'AWS Glue crawler to crawl data'
       DatabaseName: !Ref MyDatabase
       Targets:
         S3Targets:
           - Path: 's3://mergingdata1/'  # Change the path
+      TablePrefix: 'data'
+      SchemaChangePolicy:
+        UpdateBehavior: 'UPDATE_IN_DATABASE'
+        DeleteBehavior: 'LOG'
+      Configuration: '{"Version":1.0}'
 
   WorkflowLambda:
     Type: AWS::Lambda::Function
@@ -106,13 +110,13 @@ Resources:
         - JobName: !Ref MyGlueJobInput
       WorkflowName: !Ref MyWorkflow1
 
-  YelpCrawlerTrigger:
+  CrawlerTrigger:
     Type: AWS::Glue::Trigger
     Properties:
       Name: 'JobSuccessfulTrigger'
       Type: CONDITIONAL
       StartOnCreation: TRUE
-      Description: 'Trigger to start the Yelp data crawler'
+      Description: 'Trigger to start the data crawler'
       Actions:
         - CrawlerName: !Ref MyCrawler1
       Predicate:
