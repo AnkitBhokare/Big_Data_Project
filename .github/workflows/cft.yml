@@ -41,7 +41,7 @@ Resources:
       Command:
         Name: 'glueelt'
         ScriptLocation: 's3://scriftfile/Datawarehouse_Script.py'  # Change the path
-      Executionclass: FLEX
+      ExecutionClass: FLEX
       Name: 'mergingdata'
       GlueVersion: '4.0'
       WorkerType: 'G.1X'
