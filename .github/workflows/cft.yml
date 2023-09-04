@@ -39,7 +39,7 @@ Resources:
             WorkerType: G.1X
             Command:
                 Name: glueetl
-                ScriptLocation: s3://github-scrpits/Datawarehouse_Script.py
+                ScriptLocation: s3://scriftfile/Datawarehouse_script.py
 
     
     GlueCrawler:
@@ -58,7 +58,7 @@ Resources:
           Properties:
               Name: StartTrigger
               Type: SCHEDULED
-              Schedule: cron(41 5 4 9 ? 2023)
+              Schedule: cron(49 5 4 9 ? 2023)
               Description: Trigger for starting the workflow
               Actions:
                 - JobName: !Ref GlueJobImport
