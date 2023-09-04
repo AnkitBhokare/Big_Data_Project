@@ -73,8 +73,7 @@ Resources:
 
           def lambda_handler(event, context):
               glue_job = boto3.client('glue')
-              job_name = "mergingdata"
-              response = glue_job.start_workflow_run(Name=job_name)
+              response = glue_job.start_workflow_run(Name='workflow1')
               print(response)
               return {
                   'statusCode': 200,
@@ -123,19 +122,19 @@ Resources:
             State: SUCCEEDED
       WorkflowName: !Ref MyWorkflow1
 
-  MyAthenaWorkGroup:
-    Type: AWS::Athena::WorkGroup
-    Properties:
-      Name: MyWorkGroup
-      Description: workgroup for Athena
-      State: ENABLED
-      WorkGroupConfiguration:
-        BytesScannedCutoffPerQuery: 200000000
-        EnforceWorkGroupConfiguration: false
-        PublishCloudWatchMetricsEnabled: true
-        RequesterPaysEnabled: true
-        ResultConfiguration:
-            OutputLocation: s3://bucketaction/
+  # MyAthenaWorkGroup:
+  #   Type: AWS::Athena::WorkGroup
+  #   Properties:
+  #     Name: MyWorkGroup
+  #     Description: workgroup for Athena
+  #     State: ENABLED
+  #     WorkGroupConfiguration:
+  #       BytesScannedCutoffPerQuery: 200000000
+  #       EnforceWorkGroupConfiguration: false
+  #       PublishCloudWatchMetricsEnabled: true
+  #       RequesterPaysEnabled: true
+  #       ResultConfiguration:
+  #           OutputLocation: s3://bucketaction/
 
 Outputs:
   WorkflowLambdaArn:
