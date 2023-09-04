@@ -44,7 +44,7 @@ Resources:
       ExecutionProperty:
         MaxConcurrentRuns: 1
       Name: 'mergingdata'
-      GlueVersion: '3.0'
+      GlueVersion: '4.0'
       WorkerType: 'G.1X'
       MaxRetries: 0
       NumberOfWorkers: 6
