@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: "Create an S3 Bucket"
+Description: "Create an aws resources"
 
 Resources:
 
