@@ -21,7 +21,7 @@ Resources:
         Type: AWS::Glue::Workflow
         Properties:
             Description: Create workflow
-            MaxConcurrentRuns: ${{ variables.MaxConcurrentRuns }}
+            MaxConcurrentRuns: ${{ variables.MAXCONCURRENTRUNS }}
             Name: jobworkflow1        
     
     GlueJobImport:
