@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Cloud Formation Stack:
+  CFT:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
