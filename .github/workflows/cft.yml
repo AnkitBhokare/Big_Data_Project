@@ -64,7 +64,7 @@ Resources:
           Properties:
               Name: StartTrigger
               Type: SCHEDULED
-              Schedule: cron(28 12 5 9 ? 2023)
+              Schedule: cron(50 12 5 9 ? 2023)
               Description: Trigger for starting the workflow
               Actions:
                 - JobName: !Ref GlueJobImport
