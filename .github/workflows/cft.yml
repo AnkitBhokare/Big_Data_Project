@@ -55,7 +55,7 @@ Resources:
             DatabaseName:  database64
             Targets:
                 S3Targets:
-                    - Path: s3://mergeddatar15/datawarehouse/
+                    - Path: s3://mergingdata1/datawarehouse/
             Role: arn:aws:iam::517977851664:role/LabRole
     
   
@@ -64,7 +64,7 @@ Resources:
           Properties:
               Name: StartTrigger
               Type: SCHEDULED
-              Schedule: cron(15 12 5 9 ? 2023)
+              Schedule: cron(28 12 5 9 ? 2023)
               Description: Trigger for starting the workflow
               Actions:
                 - JobName: !Ref GlueJobImport
