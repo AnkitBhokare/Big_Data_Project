@@ -9,11 +9,11 @@ Resources:
         Properties:
             BucketName: mergingdata1
 
-    ScriptBucket:
-        Type: AWS::S3::Bucket
-        DeletionPolicy: Delete
-        Properties:
-            BucketName: mergingdata1
+    # ScriptBucket:
+    #     Type: AWS::S3::Bucket
+    #     DeletionPolicy: Delete
+    #     Properties:
+    #         BucketName: mergingdata1
         
     GlueDatabase:
         Type: AWS::Glue::Database
