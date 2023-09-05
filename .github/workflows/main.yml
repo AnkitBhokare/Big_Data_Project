@@ -25,6 +25,6 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
         
-      - name: copy scrift file
-        run: |
-          aws s3 cp .github/workflows/Datawarehouse
+      # - name: copy scrift file
+      #   run: |
+      #     aws s3 cp .github/workflows/Datawarehouse
