@@ -5,11 +5,11 @@ Parameters:
   NumberOfWorkers:
     Type: Number
     Description: Number of workers for the Glue job
-  
+
   MaxRetries:
     Type: Number
     Description: MaxRetries for the Glue job
-  
+
   Timeout:
     Type: Number
     Description: Timeout for the Glue job
@@ -17,7 +17,7 @@ Parameters:
   WorkerType:
     Type: String
     Description: Glue worker type for the job
-  
+
   GlueVersion:
     Type: String
     Description: GlueVersion for the job
@@ -25,74 +25,70 @@ Parameters:
   MaxConcurrentRuns:
     Type: Number
     Description: MaxConcurrentRuns for the workflow
-  
+
   BytesScannedCutoffPerQuery:
     Type: Number
     Description: BytesScannedCutoffPerQuery for the Athena workgroup
 
- 
 Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: mergingdata1
 
-    MyS3Bucket:
-        Type: AWS::S3::Bucket
-        DeletionPolicy: Delete
-        Properties:
-            BucketName: mergingdata1
-    
-    DumpingBucket:
+  DumpingBucket:
     Type: AWS::S3::Bucket
     DependsOn: LambdaInvokePermission
     Properties:
-      BucketName: 'pythonscriptfilegrp4'
+      BucketName: "pythonscriptfilegrp4"
       NotificationConfiguration:
         LambdaConfigurations:
           - Event: s3:ObjectCreated:*
             Function: !GetAtt WorkflowLambda.Arn
-    
-    GlueDatabase:
-        Type: AWS::Glue::Database
-        Properties:
-            CatalogId: !Ref AWS::AccountId
-            DatabaseInput:
-                Name: database65  
-                   
 
-    WorkflowJob:
-        Type: AWS::Glue::Workflow
-        Properties:
-            Description: Create workflow
-            MaxConcurrentRuns: !Ref MaxConcurrentRuns
-            Name: jobworkflow1        
-    
-    GlueJobImport:
-        Type: AWS::Glue::Job
-        DependsOn: MyS3Bucket
-        Properties:
-            Name: data-importsep39
-            Description: Ingests data from s3 and writes it as a parquet file to the data lake
-            ExecutionClass: FLEX
-            GlueVersion: !Ref GlueVersion
-            MaxRetries: !Ref MaxRetries 
-            NumberOfWorkers: !Ref NumberOfWorkers
-            Role: arn:aws:iam::517977851664:role/LabRole
-            Timeout: !Ref Timeout
-            WorkerType: !Ref WorkerType
-            Command:
-                Name: glueetl
-                ScriptLocation: s3://scriftfile/Datawarehouse_script.py
+  GlueDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Name: database65
 
-    
-    GlueCrawler:
-        Type: AWS::Glue::Crawler
-        Properties:
-            Name: CrawlingData64
-            DatabaseName:  database64
-            Targets:
-                S3Targets:
-                    - Path: s3://mergingdata1/datawarehouse/
-            Role: arn:aws:iam::517977851664:role/LabRole
-    
-    LambdaFunction:
+  WorkflowJob:
+    Type: AWS::Glue::Workflow
+    Properties:
+      Description: Create workflow
+      MaxConcurrentRuns: !Ref MaxConcurrentRuns
+      Name: jobworkflow1
+
+  GlueJobImport:
+    Type: AWS::Glue::Job
+    DependsOn: MyS3Bucket
+    Properties:
+      Name: data-importsep39
+      Description: Ingests data from s3 and writes it as a parquet file to the data lake
+      ExecutionClass: FLEX
+      GlueVersion: !Ref GlueVersion
+      MaxRetries: !Ref MaxRetries
+      NumberOfWorkers: !Ref NumberOfWorkers
+      Role: arn:aws:iam::517977851664:role/LabRole
+      Timeout: !Ref Timeout
+      WorkerType: !Ref WorkerType
+      Command:
+        Name: glueetl
+        ScriptLocation: s3://scriftfile/Datawarehouse_script.py
+
+  GlueCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      Name: CrawlingData64
+      DatabaseName: database64
+      Targets:
+        S3Targets:
+          - Path: s3://mergingdata1/datawarehouse/
+      Role: arn:aws:iam::517977851664:role/LabRole
+
+  LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       Code:
@@ -112,59 +108,54 @@ Resources:
       Handler: index.lambda_handler
       Role: arn:aws:iam::517977851664:role/LabRole
       Runtime: python3.11
-      FunctionName: 'LambdaforWorkflow'
+      FunctionName: "LambdaforWorkflow"
 
-    LambdaInvokePermission:
-      Type: AWS::Lambda::Permission
-      DependsOn: WorkflowLambda
-      Properties:
-        FunctionName: !GetAtt WorkflowLambda.Arn
-        Action: lambda:InvokeFunction
-        Principal: 's3.amazonaws.com'  
-        SourceAccount: !Ref AWS::AccountId
-        SourceArn: 'arn:aws:s3:::pythonscriptfilegrp4' 
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    DependsOn: WorkflowLambda
+    Properties:
+      FunctionName: !GetAtt WorkflowLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: "s3.amazonaws.com"
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: "arn:aws:s3:::pythonscriptfilegrp4"
 
+  WorkflowStartTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Name: StartTrigger
+      Type: ON_DEMAND
+      Description: Trigger for starting the workflow
+      Actions:
+        - JobName: !Ref GlueJobImport
+      WorkflowName: !Ref WorkflowJob
 
-    WorkflowStartTrigger:
-      Type: AWS::Glue::Trigger
-      Properties:
-        Name: StartTrigger
-        Type: ON_DEMAND
-        Description: Trigger for starting the workflow
-        Actions:
-          - JobName: !Ref GlueJobImport
-        WorkflowName:  !Ref WorkflowJob
+  CrawlerJobTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Name: jobsuccesfultrigger1
+      Type: CONDITIONAL
+      StartOnCreation: TRUE
+      Description: Trigger to start the crawler
+      Actions:
+        - CrawlerName: CrawlingData64
+      Predicate:
+        Conditions:
+          - LogicalOperator: EQUALS
+            JobName: !Ref GlueJobImport
+            State: SUCCEEDED
+      WorkflowName: !Ref WorkflowJob
 
-    CrawlerJobTrigger:
-      Type: AWS::Glue::Trigger
-      Properties:
-        Name: jobsuccesfultrigger1
-        Type: CONDITIONAL
-        StartOnCreation: TRUE
-        Description: Trigger to start the crawler
-        Actions:
-          - CrawlerName :  CrawlingData64
-        Predicate: 
-          Conditions:
-            - LogicalOperator: EQUALS
-              JobName: !Ref GlueJobImport
-              State: SUCCEEDED
-        WorkflowName: !Ref WorkflowJob  
-            
-            
-    MyAthenaWorkGroup:
-        Type: AWS::Athena::WorkGroup
-        Properties:
-            Name: MyWorkGroup
-            Description: workgroup for Athena
-            State: ENABLED
-            WorkGroupConfiguration:
-                BytesScannedCutoffPerQuery: !Ref BytesScannedCutoffPerQuery
-                EnforceWorkGroupConfiguration: false
-                PublishCloudWatchMetricsEnabled: true
-                RequesterPaysEnabled: true
-                ResultConfiguration:
-                    OutputLocation: s3://bucketaction/    
-
-
-    
+  MyAthenaWorkGroup:
+    Type: AWS::Athena::WorkGroup
+    Properties:
+      Name: MyWorkGroup
+      Description: workgroup for Athena
+      State: ENABLED
+      WorkGroupConfiguration:
+        BytesScannedCutoffPerQuery: !Ref BytesScannedCutoffPerQuery
+        EnforceWorkGroupConfiguration: false
+        PublishCloudWatchMetricsEnabled: true
+        RequesterPaysEnabled: true
+        ResultConfiguration:
+          OutputLocation: s3://bucketaction/
