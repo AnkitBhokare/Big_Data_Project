@@ -1,4 +1,4 @@
-name: create aws resources
+name: AWS Resource Creation 
 
 on:
   push:
@@ -7,25 +7,32 @@ on:
   workflow_dispatch:
 
 jobs:
-  CFT:
+  Deploy_CFT:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@master
+        uses: actions/checkout@v2
 
-      - name: Deploy CloudFormation stack
+      - name: Upload Script to S3 Bucket
         run: |
-          aws cloudformation deploy \
-            --stack-name create-crawler \
-            --template-file .github/workflows/cft1.yml \
-            --parameter-overrides NoOfWorkers = ${{var.NOOFWORKERS}}
-            --capabilities CAPABILITY_IAM
+          aws s3 cp .github/workflows/Datawarehouse_Script.py s3://scriftfile/
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-1
+          AWS_DEFAULT_REGION:  ${{ env.AWS_DEFAULT_REGION }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-        
-      # - name: copy scrift file
+
+      # - name: Deploy CloudFormation stack
       #   run: |
-      #     aws s3 cp .github/workflows/Datawarehouse
+      #     aws cloudformation deploy \
+      #       --stack-name CFTStack \
+      #       --template-file .github/workflows/cft.yml \
+      #       --capabilities CAPABILITY_IAM
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_DEFAULT_REGION: ${{ env.AWS_DEFAULT_REGION }}
+      #     AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+
+
+
