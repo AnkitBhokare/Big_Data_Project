@@ -22,8 +22,6 @@ Parameters:
     Type: String
     Description: GlueVersion for the job
 
-  
-
   MaxConcurrentRuns:
     Type: Number
     Description: MaxConcurrentRuns for the workflow
@@ -32,7 +30,7 @@ Parameters:
     Type: Number
     Description: BytesScannedCutoffPerQuery for the Athena workgroup
 
-
+ 
 Resources:
 
     MyS3Bucket:
@@ -40,7 +38,17 @@ Resources:
         DeletionPolicy: Delete
         Properties:
             BucketName: mergingdata1
-        
+    
+    DumpingBucket:
+    Type: AWS::S3::Bucket
+    DependsOn: LambdaInvokePermission
+    Properties:
+      BucketName: 'pythonscriptfilegrp4'
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt WorkflowLambda.Arn
+    
     GlueDatabase:
         Type: AWS::Glue::Database
         Properties:
@@ -84,33 +92,64 @@ Resources:
                     - Path: s3://mergingdata1/datawarehouse/
             Role: arn:aws:iam::517977851664:role/LabRole
     
-  
-    WorkflowStartTrigger:
-          Type: AWS::Glue::Trigger
-          Properties:
-              Name: StartTrigger
-              Type: SCHEDULED
-              Schedule: cron(50 12 5 9 ? 2023)
-              Description: Trigger for starting the workflow
-              Actions:
-                - JobName: !Ref GlueJobImport
-              WorkflowName:  !Ref WorkflowJob
+    LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: |
+          import json
+          import boto3
 
-    CrawlerJobTrigger:
-        Type: AWS::Glue::Trigger
-        Properties:
-            Name: jobsuccesfultrigger1
-            Type: CONDITIONAL
-            StartOnCreation: TRUE
-            Description: Trigger to start the crawler
-            Actions:
-              - CrawlerName :  CrawlingData64
-            Predicate: 
-              Conditions:
-                - LogicalOperator: EQUALS
-                  JobName: !Ref GlueJobImport
-                  State: SUCCEEDED
-            WorkflowName: !Ref WorkflowJob  
+          def lambda_handler(event, context):
+              glue = boto3.client('glue')
+              response = glue.start_workflow_run(Name='jobworkflow1')
+              print(response)
+              return {
+                  'statusCode': 200,
+                  'body': json.dumps('Hello from AWS Lambda!')
+              }
+
+      Handler: index.lambda_handler
+      Role: arn:aws:iam::517977851664:role/LabRole
+      Runtime: python3.11
+      FunctionName: 'LambdaforWorkflow'
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    DependsOn: WorkflowLambda
+    Properties:
+      FunctionName: !GetAtt WorkflowLambda.Arn
+      Action: lambda:InvokeFunction
+      Principal: 's3.amazonaws.com'  
+      SourceAccount: !Ref AWS::AccountId
+      SourceArn: 'arn:aws:s3:::pythonscriptfilegrp4' 
+
+
+  WorkflowStartTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Name: StartTrigger
+      Type: ON_DEMAND
+      Description: Trigger for starting the workflow
+      Actions:
+        - JobName: !Ref GlueJobImport
+      WorkflowName:  !Ref WorkflowJob
+
+  CrawlerJobTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Name: jobsuccesfultrigger1
+      Type: CONDITIONAL
+      StartOnCreation: TRUE
+      Description: Trigger to start the crawler
+      Actions:
+        - CrawlerName :  CrawlingData64
+      Predicate: 
+        Conditions:
+          - LogicalOperator: EQUALS
+            JobName: !Ref GlueJobImport
+            State: SUCCEEDED
+      WorkflowName: !Ref WorkflowJob  
             
             
     MyAthenaWorkGroup:
