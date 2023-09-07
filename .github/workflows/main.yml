@@ -31,7 +31,8 @@ jobs:
           aws cloudformation deploy \
             --stack-name CFTStack \
             --template-file .github/workflows/cft.yml \
-            --parameter-overrides "NumberOfWorkers=${{ vars.NUMBEROFWORKERS }}" \
+            --parameter-overrides "NumberOfWorkers=${{ vars.NUMBEROFWORKERS }}" 
+                                  "GlueVersion=${{ vars.GLUEVERSION }}" \
             --capabilities CAPABILITY_IAM
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

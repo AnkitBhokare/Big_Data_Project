@@ -5,6 +5,9 @@ Parameters:
   NumberOfWorkers:
     Type: Number
     Description: Number of workers for the Glue job
+  GlueVersion:
+    Type: String
+    Description: Version of AWS Glue to use
 
 Resources:
 
@@ -36,7 +39,7 @@ Resources:
             Name: data-importsep39
             Description: Ingests data from s3 and writes it as a parquet file to the data lake
             ExecutionClass: FLEX
-            GlueVersion: 4.0
+            GlueVersion: !Ref GlueVersion
             MaxRetries: 0
             NumberOfWorkers: !Ref NumberOfWorkers
             Role: arn:aws:iam::517977851664:role/LabRole
