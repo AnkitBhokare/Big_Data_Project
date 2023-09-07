@@ -21,13 +21,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
           AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
-      - name: Upload Script to S3 Bucket
-        run: |
-          echo "NumberOfWorkers=${{ vars.NUMBEROFWORKERS }}" 
-          echo "MaxRetries=${{ vars.MAXRETRIES }}"
-          echo "Timeout=${{ vars.TIMEOUT }}" 
-          echo "MaxConcurrentRuns=${{ vars.MAXCONCURRENTRUNS }}" 
-          echo "BytesScannedCutoffPerQuery=${{ vars.BYTESSCANNEDCUTOFFPERQUERY }}"
 
       - name: Deploy CloudFormation stack
         run: |
@@ -37,6 +30,8 @@ jobs:
             --parameter-overrides "NumberOfWorkers=${{ vars.NUMBEROFWORKERS }}" \
                                   "MaxRetries=${{ vars.MAXRETRIES }}" \
                                   "Timeout=${{ vars.TIMEOUT }}" \
+                                  "GlueWorkerType=${{ vars.WORKERTYPE }}" \
+                                  "GlueVersion=${{ vars.GLUEVERSION }}" \
                                   "MaxConcurrentRuns=${{ vars.MAXCONCURRENTRUNS }}" \
                                   "BytesScannedCutoffPerQuery=${{ vars.BYTESSCANNEDCUTOFFPERQUERY }}" \
             --capabilities CAPABILITY_IAM
