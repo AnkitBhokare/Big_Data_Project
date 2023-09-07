@@ -8,18 +8,22 @@ Parameters:
   
   MaxRetries:
     Type: Number
+    Default: 0
     Description: MaxRetries for the Glue job
   
   Timeout:
     Type: Number
+    Default: 50
     Description: Timeout for the Glue job
   
   MaxConcurrentRuns:
     Type: Number
+    Default: 2
     Description: MaxConcurrentRuns for the workflow
   
   BytesScannedCutoffPerQuery:
     Type: Number
+    Default: 200000000
     Description: BytesScannedCutoffPerQuery for the Athena workgroup
 
 
