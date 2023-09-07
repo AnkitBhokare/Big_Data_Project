@@ -5,15 +5,19 @@ Parameters:
   NumberOfWorkers:
     Type: Number
     Description: Number of workers for the Glue job
+  
   MaxRetries:
     Type: Number
     Description: MaxRetries for the Glue job
+  
   Timeout:
     Type: Number
     Description: Timeout for the Glue job
+  
   MaxConcurrentRuns:
     Type: Number
     Description: MaxConcurrentRuns for the workflow
+  
   BytesScannedCutoffPerQuery:
     Type: Number
     Description: BytesScannedCutoffPerQuery for the Athena workgroup
