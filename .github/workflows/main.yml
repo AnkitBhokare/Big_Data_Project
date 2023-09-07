@@ -30,7 +30,7 @@ jobs:
             --parameter-overrides "NumberOfWorkers=${{ vars.NUMBEROFWORKERS }}" \
                                   "MaxRetries=${{ vars.MAXRETRIES }}" \
                                   "Timeout=${{ vars.TIMEOUT }}" \
-                                  "GlueWorkerType=${{ vars.WORKERTYPE }}" \
+                                  "WorkerType=${{ vars.WORKERTYPE }}" \
                                   "GlueVersion=${{ vars.GLUEVERSION }}" \
                                   "MaxConcurrentRuns=${{ vars.MAXCONCURRENTRUNS }}" \
                                   "BytesScannedCutoffPerQuery=${{ vars.BYTESSCANNEDCUTOFFPERQUERY }}" \

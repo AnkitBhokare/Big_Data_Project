@@ -14,7 +14,7 @@ Parameters:
     Type: Number
     Description: Timeout for the Glue job
 
-  GlueWorkerType:
+  WorkerType:
     Type: String
     Description: Glue worker type for the job
   
