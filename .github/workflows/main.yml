@@ -28,16 +28,16 @@ jobs:
           echo "Timeout=${{ vars.TIMEOUT }}" 
           echo "MaxConcurrentRuns=${{ vars.MAXCONCURRENTRUNS }}" 
           echo "BytesScannedCutoffPerQuery=${{ vars.BYTESSCANNEDCUTOFFPERQUERY }}"
-          
+
       - name: Deploy CloudFormation stack
         run: |
           aws cloudformation deploy \
             --stack-name CFTStack \
             --template-file .github/workflows/cft.yml \
-            --parameter-overrides "NumberOfWorkers=${{ vars.NUMBEROFWORKERS }}" 
-                                  "MaxRetries=${{ vars.MAXRETRIES }}" 
-                                  "Timeout=${{ vars.TIMEOUT }}" 
-                                  "MaxConcurrentRuns=${{ vars.MAXCONCURRENTRUNS }}" 
+            --parameter-overrides "NumberOfWorkers=${{ vars.NUMBEROFWORKERS }}" \
+                                  "MaxRetries=${{ vars.MAXRETRIES }}" \
+                                  "Timeout=${{ vars.TIMEOUT }}" \
+                                  "MaxConcurrentRuns=${{ vars.MAXCONCURRENTRUNS }}" \
                                   "BytesScannedCutoffPerQuery=${{ vars.BYTESSCANNEDCUTOFFPERQUERY }}" \
             --capabilities CAPABILITY_IAM
         env:
