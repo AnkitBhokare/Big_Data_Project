@@ -5,7 +5,6 @@ Parameters:
   NumberOfWorkers:
     Type: Number
     Description: Number of workers for the Glue job
-  
   GlueVersion:
     Type: String
     Description: Version of AWS Glue to use
