@@ -35,13 +35,19 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
     Properties:
-      BucketName: mergingdata1
+      BucketName: datalake-rawzone-grp04
+  
+  MyS3Bucket1:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: output-grp04
 
   DumpingBucket:
     Type: AWS::S3::Bucket
     DependsOn: LambdaInvokePermission
     Properties:
-      BucketName: "pythonscriptfilegrp4"
+      BucketName: pythonscriptfile-grp4
       NotificationConfiguration:
         LambdaConfigurations:
           - Event: s3:ObjectCreated:*
@@ -52,20 +58,20 @@ Resources:
     Properties:
       CatalogId: !Ref AWS::AccountId
       DatabaseInput:
-        Name: database65
+        Name: datawarehouse-grp04
 
   WorkflowJob:
     Type: AWS::Glue::Workflow
     Properties:
       Description: Create workflow
       MaxConcurrentRuns: !Ref MaxConcurrentRuns
-      Name: jobworkflow1
+      Name: automationworkflow-grp04
 
   GlueJobImport:
     Type: AWS::Glue::Job
     DependsOn: MyS3Bucket
     Properties:
-      Name: data-importsep39
+      Name: data-pipeline-ingest-grp04
       Description: Ingests data from s3 and writes it as a parquet file to the data lake
       ExecutionClass: FLEX
       GlueVersion: !Ref GlueVersion
@@ -81,11 +87,11 @@ Resources:
   GlueCrawler:
     Type: AWS::Glue::Crawler
     Properties:
-      Name: CrawlingData64
-      DatabaseName: database64
+      Name: metadatacrawlergrp04
+      DatabaseName: !Ref GlueDatabase
       Targets:
         S3Targets:
-          - Path: s3://mergingdata1/datawarehouse/
+          - Path: s3://datalake-rawzone-grp04/datalake-8-sep/
       Role: arn:aws:iam::517977851664:role/LabRole
 
   LambdaFunction:
@@ -98,7 +104,7 @@ Resources:
 
           def lambda_handler(event, context):
               glue = boto3.client('glue')
-              response = glue.start_workflow_run(Name='jobworkflow1')
+              response = glue.start_workflow_run(Name='automationworkflow-grp04')
               print(response)
               return {
                   'statusCode': 200,
@@ -138,7 +144,7 @@ Resources:
       StartOnCreation: TRUE
       Description: Trigger to start the crawler
       Actions:
-        - CrawlerName: CrawlingData64
+        - CrawlerName: !Ref GlueCrawler
       Predicate:
         Conditions:
           - LogicalOperator: EQUALS
@@ -149,7 +155,7 @@ Resources:
   MyAthenaWorkGroup:
     Type: AWS::Athena::WorkGroup
     Properties:
-      Name: MyWorkGroup
+      Name: datawarehouseworkgroup-grp04
       Description: workgroup for Athena
       State: ENABLED
       WorkGroupConfiguration:
@@ -158,4 +164,4 @@ Resources:
         PublishCloudWatchMetricsEnabled: true
         RequesterPaysEnabled: true
         ResultConfiguration:
-          OutputLocation: s3://bucketaction/
+          OutputLocation: s3://output-grp04/
