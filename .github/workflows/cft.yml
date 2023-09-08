@@ -124,7 +124,7 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: "s3.amazonaws.com"
       SourceAccount: !Ref AWS::AccountId
-      SourceArn: "arn:aws:s3:::pythonscriptfilegrp4"
+      SourceArn: "arn:aws:s3:::pythonscriptfile-grp4"
 
   WorkflowStartTrigger:
     Type: AWS::Glue::Trigger
