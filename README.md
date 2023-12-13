@@ -1,4 +1,5 @@
 GitHub-Insights-Analytics
+
 Welcome to the GitHub Insights Analytics Repository! This repository is dedicated to a comprehensive exploration and analysis of GitHub's rich ecosystem. Our objective is to uncover valuable insights from user profiles, activity patterns, repository characteristics, and programming language preferences. Through this endeavor, we aim to contribute to a holistic understanding of the diverse GitHub community.
 
 Project Objective/ Problem Statement
