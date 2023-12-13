@@ -57,9 +57,6 @@ PYTHON
 How to Engage
 We invite you to be a part of this enlightening journey:
 
-Clone the Repository: Begin by cloning this repository to your local machine.
-Explore the Code: Dive into the codebase to understand our data processing pipelines, analytical methods, and visualization techniques.
-Contribute: Whether you're a novice or an expert, your contributions are valuable. Check out our Contributing Guidelines to get started.
-Connect: Have questions or insights to share? Reach out to us at [shraddha4320@gmail.com]. Collaboration and knowledge sharing are the pillars of this project.
+
 Project Impact
 Our aspiration is that this analysis not only uncovers insights but also contributes to the broader understanding of GitHub's ecosystem. By dissecting user engagement, anomaly detection, and collaborative dynamics, we aim to paint a vivid picture of the GitHub community's vibrancy and diversity. Together, let's explore, analyze, and celebrate the myriad facets of GitHub's ecosystem.
